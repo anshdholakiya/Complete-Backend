@@ -1,2 +1,0 @@
-//! server ne start karvanu
-
