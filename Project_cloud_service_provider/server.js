@@ -1,5 +1,5 @@
-const app = require('./src/app');   
-// server starting point
+require("dotenv").config();
+const app = require('./src/app');   // server starting point
 const connectDB = require("./src/db/db");
  
 connectDB();
