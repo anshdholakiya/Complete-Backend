@@ -2,8 +2,10 @@ const express = require('express'); //server creating
 const multer = require('multer');
 const uploadFile = require('./services/storage.service')
 const postModel = require("./models/post.model")
+const cors = require("cors")
 
 const app = express();
+app.use(cors())
 app.use(express.json()); //! data don't come in raw format so need to use different middleware
 
 
