@@ -1,5 +1,6 @@
 const userModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 async function registerUser(req, res) {
   const { username, email, password, role = "user" } = req.body;
@@ -9,7 +10,7 @@ async function registerUser(req, res) {
       // jevu name aevu ksaam
       { username },
       { email },
-    ],  
+    ],
   });
   if (isUserExist) {
     return res.status(409).json({ message: "User already exists" });
@@ -37,3 +38,7 @@ async function registerUser(req, res) {
     },
   });
 }
+
+module.exports = {
+  registerUser,
+};
