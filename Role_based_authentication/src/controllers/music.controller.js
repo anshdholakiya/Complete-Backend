@@ -19,6 +19,11 @@ async function createMusic(req, res) {
     } catch (err) {
         return res.status(401).json({ message: "401 for Unauthorized" });
     }
+
+    const { title } = req.body;
+    const file = req.file;
+    
+    
 }
 
 module.exports = {
