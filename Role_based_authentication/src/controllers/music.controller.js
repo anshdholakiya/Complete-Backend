@@ -50,7 +50,52 @@ async function createAlbum(req, res) {
     });
 }
 
+async function getAllMusic(req, res) {
+    const musics = await musicModel.find().populate("artist", "username email"); //* populate is used to get the data of the artist from the user model and we can select the fields we want to get from the user model by passing the second argument to populate method
+    //* it return all the music
+
+    res.status(200).json({
+        message: "All musics fetched successfully",
+        musics: musics,
+    });
+}
+
+async function getAllAlbums(req, res) {
+    const albums = await albumModel
+        .find()
+        .select("title artist")
+        .populate("artist", "username email");
+    //* populate is used to get the data of the artist from the user model and we can select the fields we want to get from the user model by passing the second argument to populate method
+    //* it return all the albums
+
+    res.status(200).json({
+        message: "All albums fetched successfully",
+        albums: albums,
+    });
+}
+
+async function getAlbumById(req, res) {
+    const albumId = req.params.albumId;
+    try {
+        const album = await albumModel
+            .findById(albumId)
+            .populate("artist", "username email")
+            .populate("musics");
+        res.status(200).json({
+            message: "Album fetched successfully",
+            album: album,
+        });
+    } catch (err) {
+        return res.status(404).json({
+            message: "Album not found",
+        });
+    }
+}
+
 module.exports = {
     createMusic,
     createAlbum,
+    getAllMusic,
+    getAllAlbums,
+    getAlbumById,
 };

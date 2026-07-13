@@ -14,7 +14,7 @@ const albumSchema = new mongoose.Schema({
     artist: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "user", //* ref always goes to the name of the model not the name of the collection
-        requierd: true,
+        required: true,
     },
 });
 
