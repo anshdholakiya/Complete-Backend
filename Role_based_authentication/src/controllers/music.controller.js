@@ -13,7 +13,7 @@ async function createMusic(req, res) {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        console.log("this is data of decoded \n", decoded); //! here we get what pass as payload while creating jwt
+        console.log("This is data of decoded after Token Verified : \n", decoded); //! here we get what pass as payload while creating jwt
 
         if (decoded.role !== "artist") {
             return res
