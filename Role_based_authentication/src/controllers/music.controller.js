@@ -1,52 +1,56 @@
 const musicModel = require("../models/music.model");
+const albumModel = require("../models/album.model");
 const jwt = require("jsonwebtoken");
 const { uploadFile } = require("../services/storage.service");
 
 async function createMusic(req, res) {
-    const token = req.cookies.token;
-    if (!token) {
-        return res
-            .status(401)
-            .json({ message: "401 for Unauthorized token j nthi bhai" });
-    }
+    const { title } = req.body;
+    const file = req.file;
 
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const result = await uploadFile(file.buffer.toString("base64"));
 
-        console.log("This is data of decoded after Token Verified : \n", decoded); //! here we get what pass as payload while creating jwt
+    const music = await musicModel.create({
+        uri: result.url,
+        title,
 
-        if (decoded.role !== "artist") {
-            return res
-                .status(403)
-                .json({ message: "don't have access to user" });
-        }
+        // artist: decoded.id,
+        //* in jwt in payload there is role and id of user
 
-        const { title } = req.body;
-        const file = req.file;
+        artist: req.user.id, //* from previos auth middleware we can access decoded data in req.user
+    });
 
-        const result = await uploadFile(file.buffer.toString("base64"));
+    res.status(201).json({
+        message: "created succssfully",
+        music: {
+            id: music._id,
+            uri: music.uri,
+            title: music.title,
+            artist: music.artist.name,
+        },
+    });
+}
 
-        const music = await musicModel.create({
-            uri: result.url,
-            title,
-            artist: decoded.id,
-        });
+async function createAlbum(req, res) {
+    const { title, musicIds } = req.body;
 
-        res.status(201).json({
-            message: "created succssfully",
-            music: {
-                id: music._id,
-                uri: music.uri,
-                title: music.title,
-                artist: music.artist.name,
-            },
-        });
-    } catch (err) {
-        //* if token is not verified
-        return res.status(401).json({ message: "401 for Unauthorized" });
-    }
+    const album = await albumModel.create({
+        title,
+        artist: req.user.id, //! here also we can access decoded data in req.user from previos auth middleware
+        musics: musicIds,
+    });
+
+    res.status(201).json({
+        message: "Album created successfully",
+        album: {
+            id: album._id,
+            title: album.title,
+            artist: album.artist,
+            musics: album.musics,
+        },
+    });
 }
 
 module.exports = {
     createMusic,
+    createAlbum,
 };
