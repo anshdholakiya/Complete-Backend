@@ -11,7 +11,8 @@ const upload = multer({
 const router = express.Router();
 
 router.post(
-    "/upload",
+    "/upload", //* request goes to this route first then it goes to authMiddleware.authArtist then it goes to upload.single("music") then it goes to musicController.createMusic
+
     authMiddleware.authArtist,
     upload.single("music"),
     musicController.createMusic,
