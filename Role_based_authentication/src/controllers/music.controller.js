@@ -51,7 +51,13 @@ async function createAlbum(req, res) {
 }
 
 async function getAllMusic(req, res) {
-    const musics = await musicModel.find().populate("artist", "username email"); //* populate is used to get the data of the artist from the user model and we can select the fields we want to get from the user model by passing the second argument to populate method
+    const musics = await musicModel
+        .find()
+        .skip(1)
+        .limit(2)
+        .populate("artist", "username email");
+
+    //* populate is used to get the data of the artist from the user model and we can select the fields we want to get from the user model by passing the second argument to populate method
     //* it return all the music
 
     res.status(200).json({
